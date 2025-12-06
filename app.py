@@ -64,7 +64,7 @@ header {
 # -----------------------------
 # UI LOGIN
 # -----------------------------
-st.title("🎄 Secret Santa Login 🎁",text_alignment='center')
+st.title("🎄 Secret Santa  🎁",text_alignment='center')
 # Liste des prénoms autorisés
 PRENOMS = [
     "Danusa", "Rathusan", "Tevisha",
@@ -72,7 +72,7 @@ PRENOMS = [
     "Nihithan", "Diluxmi", "Keerthan",
     "Jathurshan"
 ]
-
+st.markdown("""### ###""")
 name = st.selectbox("Sélectionne ton prénom :", PRENOMS)
 
 pwd = st.text_input("Mot de passe", type="password")
