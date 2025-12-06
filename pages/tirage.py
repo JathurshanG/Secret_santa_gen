@@ -47,7 +47,7 @@ st.info(f"⏳ Cette page expirera dans {remaining} secondes.")
 # ---------------------------------------------------------
 # 4️⃣ INFOS DE L'ÉVÉNEMENT 🎄
 # ---------------------------------------------------------
-DATE = "Samedi 23 Décembre 2025"
+DATE = "Mercredi 24 Décembre 2025"
 LIEU = """ 32 Av Gambetta,
            Livry-Gargan
        """
