@@ -54,6 +54,35 @@ LIEU = """ 32 Av Gambetta,
 HEURE = "19h30"
 BUDGET = "50€"
 
+st.markdown("""
+<style>
+/* Supprime la sidebar */
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* Supprime le bouton pour ouvrir la sidebar */
+button[kind="header"] {
+    display: none;
+}
+
+/* Supprime le menu ☰ */
+#MainMenu {
+    visibility: hidden;
+}
+
+/* Supprime le footer "Made with Streamlit" */
+footer {
+    visibility: hidden;
+}
+
+/* Supprime le header */
+header {
+    visibility: hidden;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.markdown(
     f"""
     <div style="padding:15px; border-radius:10px; background-color:#e8f5e9; border:1px solid #c8e6c9; margin-bottom:20px;">

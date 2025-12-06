@@ -27,6 +27,40 @@ def check_login(name, pwd):
     return users.find_one({"name": name, "password_hash": hashed}) is not None
 
 
+import streamlit as st
+
+st.set_page_config(layout="wide")
+
+st.markdown("""
+<style>
+/* Supprime la sidebar */
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* Supprime le bouton pour ouvrir la sidebar */
+button[kind="header"] {
+    display: none;
+}
+
+/* Supprime le menu ☰ */
+#MainMenu {
+    visibility: hidden;
+}
+
+/* Supprime le footer "Made with Streamlit" */
+footer {
+    visibility: hidden;
+}
+
+/* Supprime le header */
+header {
+    visibility: hidden;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # -----------------------------
 # UI LOGIN
 # -----------------------------
