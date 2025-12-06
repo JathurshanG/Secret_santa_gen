@@ -31,8 +31,16 @@ def check_login(name, pwd):
 # UI LOGIN
 # -----------------------------
 st.title("🎄 Secret Santa Login 🎁")
+# Liste des prénoms autorisés
+PRENOMS = [
+    "Danusa", "Rathusan", "Tevisha",
+    "Nevatha", "Nithurshan", "Suren",
+    "Nihithan", "Diluxmi", "Keerthan",
+    "Jathurshan"
+]
 
-name = st.text_input("Prénom")
+name = st.selectbox("Sélectionne ton prénom :", PRENOMS)
+
 pwd = st.text_input("Mot de passe", type="password")
 
 if st.button("Connexion"):
