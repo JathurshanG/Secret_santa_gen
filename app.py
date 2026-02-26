@@ -1,86 +1,36 @@
 import streamlit as st
-import hashlib
-from pymongo import MongoClient
 
-st.set_page_config(page_title="Secret Santa 🎄", page_icon="🎁")
+st.set_page_config(
+    page_title="Family Pickup App",
+    layout="centered"
+)
 
+st.markdown(
+    "<h1 style='text-align: center;'>Family Pickup Management</h1>",
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+    <div style="max-width: 700px; margin: auto; text-align: justify;">
+        <p>
+        This application helps manage family pickups.
+        Families are registered in advance, and drivers can assign themselves
+        to a pickup and track what has already been done in real time.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+col1, col2,col3 = st.columns(3)
 
-# -----------------------------
-# CACHE MONGO
-# -----------------------------
-@st.cache_resource
-def get_db():
-    client = MongoClient(st.secrets["MONGO_URI"])
-    return client["secret_santa"]
+with col1:
+    if st.button("Family Registration", use_container_width=True):
+        st.switch_page("pages/family.py")
 
-db = get_db()
-users = db["users"]
+with col2:
+    if st.button("Driver Dashboard", use_container_width=True):
+        st.switch_page("pages/driver.py")
 
-# -----------------------------
-# PASSWORD CHECK
-# -----------------------------
-def hash_password(pwd):
-    return hashlib.sha256(pwd.encode()).hexdigest()
-
-def check_login(name, pwd):
-    hashed = hash_password(pwd)
-    return users.find_one({"name": name, "password_hash": hashed}) is not None
-
-
-import streamlit as st
-
-st.set_page_config(layout="wide")
-
-st.markdown("""
-<style>
-/* Supprime la sidebar */
-section[data-testid="stSidebar"] {
-    display: none;
-}
-
-/* Supprime le bouton pour ouvrir la sidebar */
-button[kind="header"] {
-    display: none;
-}
-
-/* Supprime le menu ☰ */
-#MainMenu {
-    visibility: hidden;
-}
-
-/* Supprime le footer "Made with Streamlit" */
-footer {
-    visibility: hidden;
-}
-
-/* Supprime le header */
-header {
-    visibility: hidden;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# -----------------------------
-# UI LOGIN
-# -----------------------------
-st.title("🎄 Secret Santa  🎁",text_alignment='center')
-# Liste des prénoms autorisés
-PRENOMS = [
-    "Danusa", "Rathusan", "Tevisha",
-    "Nevatha", "Nithurshan", "Suren",
-    "Nihithan", "Diluxmi", "Keerthan",
-    "Jathurshan"
-]
-st.markdown("""### ###""")
-name = st.selectbox("Sélectionne ton prénom :", PRENOMS)
-
-pwd = st.text_input("Mot de passe", type="password")
-
-if st.button("Connexion"):
-    if check_login(name, pwd):
-        st.session_state["user"] = name
-        st.switch_page("pages/tirage.py")
-
-    else:
-        st.error("❌ Mauvais mot de passe ou prénom.")
+with col3:
+    if st.button("See Details", use_container_width=True):
+        st.switch_page("pages/history.py")
