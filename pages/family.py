@@ -54,16 +54,31 @@ with st.form("family_form"):
 
     arrival_date = st.date_input("Arrival date")
 
-    departure_date = st.date_input("Departure date", key="dep_date")
+    departure_date = st.date_input("Departure date", key="dep_
     
-    transport_mode = st.selectbox(
-        "Mode of transport",
-        ["Plane", "Boat", "Bus", "Car", "Other"]
+    import streamlit as st
+
+transport_mode = st.selectbox(
+    "Mode of transport",
+    ["Plane", "Boat", "Bus", "Car", "Other"]
+)
+
+extra = None
+if transport_mode == "Plane":
+    extra = st.text_input(
+        "Extra information (required)",
+        placeholder="e.g. Terminal 2E – Paris Charles de Gaulle (CDG)"
     )
 
-    extra = st.text_input("Extra information (optional)")
-
+if st.button("Submit"):
+    if transport_mode == "Plane" and not extra:
+        st.error("Extra information is required when transport mode is Plane.")
+    else:
+        st.success("Form submitted successfully!")
+        st.write("Transport:", transport_mode)
+        st.write("Extra:", extra)
     # ✅ OBLIGATOIRE
+    
     submit = st.form_submit_button("Save family")
 # --------------------------------------------------
 # Insert into MongoDB
