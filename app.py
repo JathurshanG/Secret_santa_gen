@@ -10,6 +10,12 @@ if "page" not in st.session_state:
 if "nav_target" not in st.session_state:
     st.session_state.nav_target = None
 
+st.set_page_config(
+    page_title="Mahadev Transport ",
+    page_icon="",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # --------------------------------------------------
 # Sync navigation request (AVANT widgets)
