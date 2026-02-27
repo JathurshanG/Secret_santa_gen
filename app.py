@@ -66,7 +66,7 @@ with st.sidebar:
     st.title("MAHA TRANSPORT")
     st.radio(
         "Navigation",
-        ["Home", "Family registration", "Drivers", "Dashboard"],
+        ["Home", "Family registration", "Drivers"],
         key="page"
     )
 
