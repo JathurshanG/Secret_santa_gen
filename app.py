@@ -82,3 +82,4 @@ elif st.session_state.page == "Family registration":
 else:
     st.title("🚧 Coming soon")
     st.info("This section is under construction.")
+    
