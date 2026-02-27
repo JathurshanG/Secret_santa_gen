@@ -82,7 +82,7 @@ def show_family():
 
         transport_mode = st.selectbox(
             "Mode of transport",
-            ["Plane", "Boat", "Bus", "Car", "Other"]
+            ["Plane", "Boat", "Bus", "Car","Train" ,"Other"]
         )
 
         extra = st.text_input("Extra information (optional)")
