@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, time
 
 # --------------------------------------------------
 # MongoDB connection
@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 st.markdown(
-    "<h1 style='text-align:center;'> Family Registration</h1>",
+    "<h1 style='text-align:center;'>Family Registration</h1>",
     unsafe_allow_html=True
 )
 
@@ -49,37 +49,47 @@ st.markdown("<br>", unsafe_allow_html=True)
 # --------------------------------------------------
 with st.form("family_form"):
 
+    st.subheader("Family information")
     family_name = st.text_input("Family name (Last name & First name)")
-    number_of_people = st.number_input("Number of people", min_value=1)
-
-    arrival_date = st.date_input("Arrival date")
-
-    departure_date = st.date_input("Departure date", key="dep_
-    
-    import streamlit as st
-
-transport_mode = st.selectbox(
-    "Mode of transport",
-    ["Plane", "Boat", "Bus", "Car", "Other"]
-)
-
-extra = None
-if transport_mode == "Plane":
-    extra = st.text_input(
-        "Extra information (required)",
-        placeholder="e.g. Terminal 2E – Paris Charles de Gaulle (CDG)"
+    number_of_people = st.number_input(
+        "Number of people",
+        min_value=1,
+        step=1
     )
 
-if st.button("Submit"):
-    if transport_mode == "Plane" and not extra:
-        st.error("Extra information is required when transport mode is Plane.")
-    else:
-        st.success("Form submitted successfully!")
-        st.write("Transport:", transport_mode)
-        st.write("Extra:", extra)
-    # ✅ OBLIGATOIRE
-    
+    st.divider()
+
+    st.subheader("Arrival")
+    col1, col2 = st.columns(2)
+    with col1:
+        arrival_date = st.date_input("Arrival date")
+    with col2:
+        arrival_time = st.time_input(
+            "Arrival time (optional)",
+            value=time(12, 0)
+        )
+
+    st.subheader("Departure")
+    col3, col4 = st.columns(2)
+    with col3:
+        departure_date = st.date_input("Departure date")
+    with col4:
+        departure_time = st.time_input(
+            "Departure time (optional)",
+            value=time(12, 0)
+        )
+
+    st.divider()
+
+    transport_mode = st.selectbox(
+        "Mode of transport",
+        ["Plane", "Boat", "Bus", "Car", "Other"]
+    )
+
+    extra = st.text_input("Extra information (optional)")
+
     submit = st.form_submit_button("Save family")
+
 # --------------------------------------------------
 # Insert into MongoDB
 # --------------------------------------------------
@@ -87,17 +97,25 @@ if submit:
 
     if not family_name:
         st.warning("Please enter the family name.")
-    else:
-        collection.insert_one({
-            "family_name": family_name,
-            "number_of_people": number_of_people,
-            "arrival_date": str(arrival_date),
-            "departure_date": str(departure_date) if departure_date else None,
-            "transport_mode": transport_mode,
-            "extra": extra,
-            "status": "waiting",
-            "assigned_driver": None,
-            "created_at": datetime.utcnow()
-        })
+        st.stop()
 
-        st.success("Family successfully registered ✅")
+    arrival_datetime = datetime.combine(arrival_date, arrival_time)
+    departure_datetime = datetime.combine(departure_date, departure_time)
+
+    if departure_datetime < arrival_datetime:
+        st.warning("Departure cannot be before arrival.")
+        st.stop()
+
+    collection.insert_one({
+        "family_name": family_name,
+        "number_of_people": number_of_people,
+        "arrival_datetime": arrival_datetime,
+        "departure_datetime": departure_datetime,
+        "transport_mode": transport_mode,
+        "extra": extra,
+        "status": "waiting",
+        "assigned_driver": None,
+        "created_at": datetime.utcnow()
+    })
+
+    st.success("Family successfully registered ✅")
