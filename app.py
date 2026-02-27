@@ -51,17 +51,6 @@ with nav1:
     """,
     unsafe_allow_html=True
 )   
-with nav2:
-    if st.button("Family", use_container_width=True):
-        st.switch_page("pages/family.py")
-
-with nav3:
-    if st.button("Driver", use_container_width=True):
-        st.switch_page("pages/driver.py")
-
-with nav4:
-    if st.button("History", use_container_width=True):
-        st.switch_page("pages/history.py")
 
 # --------------------------------------------------
 # Home content
