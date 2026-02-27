@@ -82,11 +82,3 @@ c1, c2, c3 = st.columns(3)
 with c1:
     if st.button("Family Registration", use_container_width=True):
         st.switch_page("pages/family.py")
-
-with c2:
-    if st.button("Driver Dashboard", use_container_width=True):
-        st.switch_page("pages/driver.py")
-
-with c3:
-    if st.button("See Details", use_container_width=True):
-        st.switch_page("pages/history.py")
