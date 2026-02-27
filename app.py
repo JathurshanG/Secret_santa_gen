@@ -79,6 +79,6 @@ st.markdown("<br>", unsafe_allow_html=True)
 # Call-to-action buttons
 c1, c2, c3 = st.columns(3)
 
-with c1:
+with c2:
     if st.button("Family Registration", use_container_width=True):
         st.switch_page("pages/family.py")
