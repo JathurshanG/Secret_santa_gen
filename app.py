@@ -89,56 +89,29 @@ Sierra\tCOACH\tRancy
 Vimala\tCOACH\tRancy
 """
 
-
 def load_data():
     df = pd.read_csv(io.StringIO(RAW_DATA), sep="\t")
     df.columns = ["Guest", "Accommodation", "Family"]
-
-    # nettoyage minimum
-    df["Guest"] = df["Guest"].str.strip()
-    df["Accommodation"] = df["Accommodation"].str.strip()
-    df["Family"] = df["Family"].str.strip()
-
     return df
 
-
 def main():
-    st.set_page_config(page_title="Accommodation Filter", layout="centered")
+    st.title("Passengers by Accommodation")
 
     df = load_data()
 
-    st.title("Accommodation Filter")
+    # liste des accommodations
+    accommodations = sorted(df["Accommodation"].unique())
+
+    # sélection
+    selected = st.selectbox("Choose accommodation", accommodations)
 
     # filtre
-    accommodations = sorted(df["Accommodation"].unique())
-    selected = st.radio("Select accommodation", accommodations)
-
     filtered = df[df["Accommodation"] == selected]
 
-    # affichage
-    st.write(f"Guests: {len(filtered)}")
-    st.dataframe(filtered, use_container_width=True)
-
-    # stats
-    st.subheader("Distribution")
-    st.bar_chart(df["Accommodation"].value_counts())
-
-    # debug data (important)
-    st.subheader("⚠️ Data issues")
-
-    duplicates = df[df.duplicated("Guest", keep=False)]
-    if not duplicates.empty:
-        st.write("Duplicate names:")
-        st.dataframe(duplicates)
-
-    weird_values = df[
-        df["Accommodation"].str.lower().isin(df["Guest"].str.lower())
-    ]
-
-    if not weird_values.empty:
-        st.write("⚠️ Accommodation looks like a person name:")
-        st.dataframe(weird_values)
-
+    # affichage simple
+    st.write(f"Passengers in {selected}:")
+    for guest in filtered["Guest"]:
+        st.write(f"- {guest}")
 
 if __name__ == "__main__":
     main()
