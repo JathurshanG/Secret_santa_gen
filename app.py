@@ -1,91 +1,89 @@
+import io
+from textwrap import dedent
+
+import pandas as pd
 import streamlit as st
-from views.family import show_family
 
-# --------------------------------------------------
-# Session state init (TOUT EN HAUT)
-# --------------------------------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+st.set_page_config(page_title="Liste des invités", page_icon="🪑", layout="wide")
 
-if "nav_target" not in st.session_state:
-    st.session_state.nav_target = None
+RAW_DATA = dedent(
+    """
+    Guests\tSEATS\tFamille
+    Sinna Maama\tCOACH\tJeyam
+    Gowri Maami\tCOACH\tJeyam
+    Keshini\tCOACH\tJeyam
+    Palan Maha\tCOACH\tJeypalan
+    Ranji\tCOACH\tJeypalan
+    Babeeshan\tCOACH\tJeypalan
+    Mathusa\tCOACH\tJeypalan
+    Shagee\tCOACH\tJeypalan
+    Maama\tCOACH\tSriskandarajah
+    Pirakash\tPirakash\tSriskandarajah
+    Nithurshan\tCOACH\tSriskandarajah
+    Jeyanthi\tCOACH\tSriskandarajah
+    Sritharan\tCOACH\tSritharan
+    Seelan\tCOACH\tJeyseelan
+    Tadja\tCOACH\tJeyseelan
+    Kasturi\tCOACH\tJeyseelan
+    Mathuri\tCOACH\tJeyseelan
+    Kabi\tCOACH\tJeyseelan
+    Nagules\tCOACH\tNagulesweran
+    Priya Nagules\tCOACH\tNagulesweran
+    Thagsan\tPirakash\tNagulesweran
+    Janushan\tPirakash\tNagulesweran
+    Paranthaman\tCOACH\tParanthaman
+    Theepan\tCOACH\tPirathipan
+    Jeyanthi\tCOACH\tPirathipan
+    Vibishan\tCOACH\tPirathipan
+    Mathaan\tCOACH\tMatanmohan
+    Mithilan\tPirakash\tMatanmohan
+    Tharon\tPirakash\tMatanmohan
+    Aruni\tCOACH\tMatanmohan
+    Femme Mathaan\tCOACH\tMatanmohan
+    Sutha\tCOACH\tSuthajini
+    Kones\tCOACH\tSuthajini
+    Sneha\tCOACH\tVathani
+    Viji\tCOACH\tVijitha
+    Dilakshan\tCOACH\tVijitha
+    Sajeevan\tCOACH\tVijitha
+    Dinsy\tCOACH\tVijitha
+    Vannu\tCOACH\tSuthi
+    Suthi\tCOACH\tSuthi
+    Palan Kandasamy\tCOACH\tSuthi
+    Ranjana\tCOACH\tRanjana
+    Sathees\tCOACH\tSathees
+    Sathees 1\tCOACH\tSathees
+    Sathees 2\tCOACH\tSathees
+    Sathees 3\tCOACH\tSathees
+    Sathees 4\tCOACH\tSathees
+    Aunthy\tCOACH\tSivapalan
+    Clinton\tCOACH\tRancy
+    Sierra\tCOACH\tRancy
+    Vimala\tCOACH\tRancy
+    """
+).strip()
 
-st.set_page_config(
-    page_title="Mahadev Transport ",
-    page_icon="",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
-# --------------------------------------------------
-# Sync navigation request (AVANT widgets)
-# --------------------------------------------------
-if st.session_state.nav_target:
-    st.session_state.page = st.session_state.nav_target
-    st.session_state.nav_target = None
+@st.cache_data
+def load_data() -> pd.DataFrame:
+    df = pd.read_csv(io.StringIO(RAW_DATA), sep="\t")
+    df.columns = ["Guest", "Accommodation", "Family"]
+    return df
 
 
-# --------------------------------------------------
-# Home page
-# --------------------------------------------------
-def show_home():
-    st.markdown(
-        "<h1 style='text-align:center;'>Family Pickup Management</h1>",
-        unsafe_allow_html=True
-    )
+def main() -> None:
+    df = load_data()
 
-    st.markdown(
-        """
-        <div style="max-width:700px; margin:auto; text-align: justify;">
-            <p>
-            This application helps manage family pickups.
-            Families are registered in advance, and drivers can assign
-            themselves to available convoys and track completed ones
-            in real time.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.title("Filtre par accommodation")
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    accommodations = sorted(df["Accommodation"].unique())
+    selected_accommodation = st.selectbox("Choisir accommodation", accommodations)
 
-    _, c2, _ = st.columns(3)
-    with c2:
-        if st.button("Register a family", use_container_width=True):
-            st.session_state.nav_target = "Family registration"
-            st.rerun()
+    filtered = df[df["Accommodation"] == selected_accommodation]
+
+    st.write(f"Nombre d'invités: {len(filtered)}")
+    st.dataframe(filtered, use_container_width=True)
 
 
-# --------------------------------------------------
-# Page config
-# --------------------------------------------------
-st.set_page_config(
-    page_title="MAHA TRANSPORT",
-    layout="wide"
-)
-
-# --------------------------------------------------
-# Sidebar navigation (SOURCE UNIQUE)
-# --------------------------------------------------
-with st.sidebar:
-    st.title("MAHA TRANSPORT")
-    st.radio(
-        "Navigation",
-        ["Home", "Family registration", "Drivers"],
-        key="page"
-    )
-
-# --------------------------------------------------
-# Page routing
-# --------------------------------------------------
-if st.session_state.page == "Home":
-    show_home()
-
-elif st.session_state.page == "Family registration":
-    show_family()
-
-else:
-    st.title("🚧 Coming soon")
-    st.info("This section is under construction.")
-    
+if __name__ == "__main__":
+    main()
